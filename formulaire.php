@@ -29,7 +29,7 @@
 			<div class="col-lg-1"></div>
 			
 			
-			<form class="col-lg-3"method="post" action="notsafe.php"> 
+			<form class="col-lg-3" method="post" action="notsafe.php"> 
 			  <legend>Formulaire non-sécurisé</legend>
 				<div class="form-group">
 				  <label for="texte">Login : </label>

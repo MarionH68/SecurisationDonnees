@@ -14,10 +14,11 @@ catch(PDOException $e)
     {
     echo "Connection failed: " . $e->getMessage();
     }
-	
-
+echo "<br>";
+echo "Bienvenue ".$_POST['loginNS']." !";	
+//echo "<script>alert('Hello')</script>";
 echo "<table style='border: solid 1px black;'>";
-echo "<tr><th>Id</th><th>Login</th><th>Pass</th></tr>";
+echo "<tr><th>Login</th><th>Owner</th><th>Type</th><th>Amount</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator { 
     function __construct($it) { 
@@ -41,7 +42,7 @@ class TableRows extends RecursiveIteratorIterator {
 
 
 try {
-    $stmt = $conn->prepare("SELECT id, login, pass FROM users"); 
+    $stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$_POST['passwordNS']."';"); 
     $stmt->execute();
 
     // set the resulting array to associative
