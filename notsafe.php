@@ -8,17 +8,31 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connected successfully"; 
+    //echo "Connected successfully"; 
     }
 catch(PDOException $e)
     {
     echo "Connection failed: " . $e->getMessage();
     }
-echo "<br>";
-echo "Bienvenue ".$_POST['loginNS']." !";	
+	
+echo "<br>
+      <link href=\"bootstrap/dist/css/bootstrap.css\" rel=\"stylesheet\">
+	  <link href=\"bootstrap/dist/css/tuto.css\" rel=\"stylesheet\">";
 //echo "<script>alert('Hello')</script>";
-echo "<table style='border: solid 1px black;'>";
-echo "<tr><th>Login</th><th>Owner</th><th>Type</th><th>Amount</th></tr>";
+echo "<div class='panel panel-primary'>
+  <table class='table table-striped table-condensed'>
+    <div class='panel-heading'> 
+      <h3 class='panel-title'>Bienvenue ".$_POST['loginNS']." !</h3>
+		</div>
+		<thead>
+      <tr>
+        <th>Login</th>
+        <th>Owner</th>
+        <th>Type</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>";
 
 class TableRows extends RecursiveIteratorIterator { 
     function __construct($it) { 
@@ -26,7 +40,7 @@ class TableRows extends RecursiveIteratorIterator {
     }
 
     function current() {
-        return "<td style='width:150px;border:1px solid black;'>" . parent::current(). "</td>";
+        return "<td>" . parent::current(). "</td>";
     }
 
     function beginChildren() { 
@@ -56,7 +70,7 @@ if (isset($_POST['SignIn'])) {
 		echo "Error: " . $e->getMessage();
 	}
 	$conn = null;
-	echo "</table>";
+	echo "</tbody></table>";
 	} 
 elseif (isset($_POST['dico'])) {
  try {
@@ -87,10 +101,15 @@ elseif (isset($_POST['dico'])) {
 		echo "Error: " . $e->getMessage();
 	}
 	$conn = null;
-	echo "</table>";
+	echo "</tbody></table>";
 	fclose($monfichier);
 	} 
     // j'ai cliqué sur « Attaque par dictionnaire »
  
-
+	echo "
+	<form class=\"col-lg-3\" method=\"post\" action=\"deconnexion.php\">
+		<br><br>
+		<button type=\"submit\" name=\"deconnexion\" class=\"btn btn-danger\">Log out</button>
+	</form>
+	"
 ?>

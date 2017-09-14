@@ -18,7 +18,7 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connected successfully"; 
+    //echo "Connected successfully"; 
     }
 catch(PDOException $e)
     {
@@ -32,17 +32,32 @@ if(isset($_POST["g-recaptcha-response"])) {
 		$_SERVER["REMOTE_ADDR"],
 		$_POST["g-recaptcha-response"]
 	);
-	if ($resp != null && $resp->success) {echo "CAPTCHA OK";}
+	if ($resp != null && $resp->success) {}
 	else {
 		header("Location: formulaire.php");
 		exit;
 	}
 }
 	
-echo "<br>";
-echo "Bienvenue ".htmlspecialchars($_POST['loginS'],ENT_QUOTES)." !";		
-echo "<table style='border: solid 1px black;'>";
-echo "<tr><th>Login</th><th>Owner</th><th>Type</th><th>Amount</th></tr>";
+echo "<br>
+      <link href=\"bootstrap/dist/css/bootstrap.css\" rel=\"stylesheet\">
+	  <link href=\"bootstrap/dist/css/tuto.css\" rel=\"stylesheet\">";
+	  
+//echo "Bienvenue ".htmlspecialchars($_POST['loginS'],ENT_QUOTES)." !";		
+echo "<div class='panel panel-primary'>
+  <table class='table table-striped table-condensed'>
+    <div class='panel-heading'> 
+      <h3 class='panel-title'>Bienvenue ".htmlspecialchars($_POST['loginS'],ENT_QUOTES)." !</h3>
+		</div>
+		<thead>
+      <tr>
+        <th>Login</th>
+        <th>Owner</th>
+        <th>Type</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>";
 
 class TableRows extends RecursiveIteratorIterator { 
     function __construct($it) { 
@@ -50,7 +65,7 @@ class TableRows extends RecursiveIteratorIterator {
     }
 
     function current() {
-        return "<td style='width:150px;border:1px solid black;'>" . parent::current(). "</td>";
+        return "<td>" . parent::current(). "</td>";
     }
 
     function beginChildren() { 
@@ -87,9 +102,7 @@ try {
 	$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
     $stmt->execute(array($login,$pass));
     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-	echo "ICI !!!!!";
     foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
-	echo "NAN LA !!!!!";
         echo $v;
     }
 }
@@ -97,11 +110,12 @@ catch(PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
 $conn = null;
-echo "</table>";
+echo "</tbody></table>";
 
 
 echo "
 	<form class=\"col-lg-3\" method=\"post\" action=\"deconnexion.php\">
+		<br><br>
 		<button type=\"submit\" name=\"deconnexion\" class=\"btn btn-danger\">Log out</button>
 	</form>
 "
