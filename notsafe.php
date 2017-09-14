@@ -60,22 +60,37 @@ if (isset($_POST['SignIn'])) {
 	} 
 elseif (isset($_POST['dico'])) {
  try {
-		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$_POST['passwordNS']."';"); 
+		$monfichier = fopen('Prenoms.txt', 'r');
+		$ligne = fgets($monfichier);
+		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$ligne."';"); 
 		$stmt->execute();
-
+		echo $ligne;
 		// set the resulting array to associative
+		$rows = $stmt->rowCount();
 		$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
-		/*foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
+		
+		while (($rows == 0) AND ($ligne !== NULL))	{
+			$ligne = fgets($monfichier);
+			$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$ligne."';"); 
+			$stmt->execute();
+			echo $ligne;
+			// set the resulting array to associative
+			$rows = $stmt->rowCount();
+			$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
+
+		}
+		foreach(new TableRows(new RecursiveArrayIterator($rows)) as $k=>$v) { 
 			echo $v;
-		}*/
-	}
+		}
+		}	
 	catch(PDOException $e) {
 		echo "Error: " . $e->getMessage();
 	}
 	$conn = null;
 	echo "</table>";
+	fclose($monfichier);
 	} 
-    // j'ai cliqué sur « Prévisualiser »
+    // j'ai cliqué sur « Attaque par dictionnaire »
  
-}
+
 ?>
