@@ -59,7 +59,13 @@
 						</div>
 					<?php } ?>
 				</div>
+				
 				<div class="g-recaptcha" data-sitekey="<?php echo $siteKey; ?>"></div>
+				<?php if($_SESSION['captcha'] == false){ ?>
+					<div class="alert alert-danger">
+						<strong>Error !</strong> Click on the captcha.
+					</div>
+				<?php }?>
 				<br>
 				<button type="submit" name="SignIn" class="btn btn-primary">Sign in</button>
 				<button type="submit" name="dico" class="btn btn-danger">Attaque dictionnaire</button>

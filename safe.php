@@ -34,6 +34,7 @@ if(isset($_POST["g-recaptcha-response"])) {
 	);
 	if ($resp != null && $resp->success) {}
 	else {
+		$_SESSION['captcha'] = false;
 		header("Location: formulaire.php");
 		exit;
 	}
