@@ -99,4 +99,11 @@ catch(PDOException $e) {
 $conn = null;
 echo "</table>";
 
+
+echo "
+	<form class=\"col-lg-3\" method=\"post\" action=\"deconnexion.php\">
+		<button type=\"submit\" name=\"deconnexion\" class=\"btn btn-danger\">Log out</button>
+	</form>
+"
+
 ?>
