@@ -12,6 +12,13 @@ $pass = $_POST['passwordS'];
 $siteKey = '6LcVnTAUAAAAAGIqEzqNZ8pvMcMMv0f-EYdI7UTR'; //clé publique de la captcha google
 $secret = '6LcVnTAUAAAAAIWUUKEud6RzSkSE2qUrm--Mw9Jj'; //clé secréte de la captcha google
 
+
+
+$_SESSION['login'] = true;
+$_SESSION['password'] = true;
+$_SESSION['captcha'] = true;
+
+
 //Connexion à la base de données en PDO
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -32,7 +39,9 @@ if(isset($_POST["g-recaptcha-response"])) {
 		$_POST["g-recaptcha-response"]
 	);
 	if ($resp != null && $resp->success) {echo "CAPTCHA OK";}
-	else {echo "CAPTCHA incorrect";}
+	else {
+		header("Location: formulaire.php");
+		echo "CAPTCHA incorrect";}
 }
 	
 echo "<br>";
@@ -59,11 +68,19 @@ class TableRows extends RecursiveIteratorIterator {
 } 
 
 try {
-    $stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
+    $resLogin = $conn->prepare("SELECT * FROM users WHERE users.login = ?"); 
+    $resLogin->execute(array($login));
+	$verifLogin = $resLogin->fetchAll();
+	if(count($verifLogin)==0){
+		$_SESSION['login']=false;
+		header("Location: formulaire.php");
+	}
+	
+	$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
     $stmt->execute(array($login,$pass));
-
+	
     // set the resulting array to associative
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
+    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
     foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
         echo $v;
     }

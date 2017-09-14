@@ -3,6 +3,7 @@
 	$siteKey = '6LcVnTAUAAAAAGIqEzqNZ8pvMcMMv0f-EYdI7UTR'; //clé publique de la captcha google
 	$secret = '6LcVnTAUAAAAAIWUUKEud6RzSkSE2qUrm--Mw9Jj'; //clé secréte de la captcha google
 	require 'recaptchalib.php';
+	session_start();
 ?>
 <html>
     <head>
@@ -18,12 +19,23 @@
 		
 		<div>
 			<div class="col-lg-1"></div>
-			
+			<?php echo $_SESSION['login'] ?>
 			<form class="col-lg-3" method="post" action="safe.php"> 
 			  <legend>Formulaire sécurisé</legend>
 				<div class="form-group">
-				  <label for="texte">Login : </label>
-				  <input id="loginS" name="loginS" type="text" class="form-control">
+					<?php
+						if($_SESSION['login'] == true){ ?>
+						<label for="texte">Login : </label>
+						<input id="loginS" name="loginS" type="text" class="form-control">
+					<?php }
+						else{ ?>
+						<div class="form-group has-error has-feedback">
+						  <label class="control-label" for="idError">Login</label>
+						  <input name="loginS" type="text" class="form-control" id="idError">
+						  <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+						  <span class="help-block">Corrigez l'erreur s'il vous plait</span>
+						</div>
+					<?php } ?>
 				</div>
 				<div class="form-group">
 				  <label for="texte">Password : </label>
