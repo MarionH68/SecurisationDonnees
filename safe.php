@@ -1,4 +1,6 @@
 <?php
+
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -6,6 +8,9 @@ $dbname = "banque";
 //Récupération des variables envoyées par le formulaire
 $login = $_POST['loginS'];
 $pass = $_POST['passwordS'];
+
+$siteKey = '6LcVnTAUAAAAAGIqEzqNZ8pvMcMMv0f-EYdI7UTR'; //clé publique de la captcha google
+$secret = '6LcVnTAUAAAAAIWUUKEud6RzSkSE2qUrm--Mw9Jj'; //clé secréte de la captcha google
 
 //Connexion à la base de données en PDO
 try {
@@ -18,6 +23,7 @@ catch(PDOException $e)
     {
     echo "Connection failed: " . $e->getMessage();
     }
+	
 echo "<br>";
 echo "Bienvenue ".htmlspecialchars($_POST['loginS'],ENT_QUOTES)." !";		
 echo "<table style='border: solid 1px black;'>";
