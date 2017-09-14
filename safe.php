@@ -1,5 +1,5 @@
 <?php
-
+require 'recaptchalib.php';
 
 $servername = "localhost";
 $username = "root";
@@ -23,6 +23,17 @@ catch(PDOException $e)
     {
     echo "Connection failed: " . $e->getMessage();
     }
+	
+
+$reCaptcha = new ReCaptcha($secret);
+if(isset($_POST["g-recaptcha-response"])) {
+		$resp = $reCaptcha->verifyResponse(
+		$_SERVER["REMOTE_ADDR"],
+		$_POST["g-recaptcha-response"]
+	);
+	if ($resp != null && $resp->success) {echo "CAPTCHA OK";}
+	else {echo "CAPTCHA incorrect";}
+}
 	
 echo "<br>";
 echo "Bienvenue ".htmlspecialchars($_POST['loginS'],ENT_QUOTES)." !";		
