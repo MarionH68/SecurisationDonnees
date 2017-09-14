@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'recaptchalib.php';
 
 $servername = "localhost";
@@ -11,13 +12,6 @@ $pass = $_POST['passwordS'];
 
 $siteKey = '6LcVnTAUAAAAAGIqEzqNZ8pvMcMMv0f-EYdI7UTR'; //clé publique de la captcha google
 $secret = '6LcVnTAUAAAAAIWUUKEud6RzSkSE2qUrm--Mw9Jj'; //clé secréte de la captcha google
-
-
-
-$_SESSION['login'] = true;
-$_SESSION['password'] = true;
-$_SESSION['captcha'] = true;
-
 
 //Connexion à la base de données en PDO
 try {
@@ -71,8 +65,8 @@ try {
     $resLogin = $conn->prepare("SELECT * FROM users WHERE users.login = ?"); 
     $resLogin->execute(array($login));
 	$verifLogin = $resLogin->fetchAll();
-	if(count($verifLogin)==0){
-		$_SESSION['login']=false;
+	if(count($verifLogin) == 0){
+		$_SESSION['login'] = 0;
 		header("Location: formulaire.php");
 	}
 	
@@ -81,6 +75,12 @@ try {
 	
     // set the resulting array to associative
     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+	if(isset($result)){
+		$_SESSION['login'] = 2;
+		$_SESSION['nomLogin'] = $login;
+		$_SESSION['password'] = false;
+		header("Location: formulaire.php");
+	}
     foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
         echo $v;
     }
