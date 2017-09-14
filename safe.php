@@ -35,7 +35,8 @@ if(isset($_POST["g-recaptcha-response"])) {
 	if ($resp != null && $resp->success) {echo "CAPTCHA OK";}
 	else {
 		header("Location: formulaire.php");
-		echo "CAPTCHA incorrect";}
+		exit;
+	}
 }
 	
 echo "<br>";
@@ -68,20 +69,27 @@ try {
 	if(count($verifLogin) == 0){
 		$_SESSION['login'] = 0;
 		header("Location: formulaire.php");
+		exit;
 	}
 	
 	$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
     $stmt->execute(array($login,$pass));
 	
     // set the resulting array to associative
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-	if(isset($result)){
+	if(count($stmt->fetchAll())==0){
 		$_SESSION['login'] = 2;
-		$_SESSION['nomLogin'] = $login;
+		$_SESSION['nomLogin'] = $_POST['loginS'];
 		$_SESSION['password'] = false;
 		header("Location: formulaire.php");
+		exit;
 	}
+	
+	$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
+    $stmt->execute(array($login,$pass));
+    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+	echo "ICI !!!!!";
     foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
+	echo "NAN LA !!!!!";
         echo $v;
     }
 }

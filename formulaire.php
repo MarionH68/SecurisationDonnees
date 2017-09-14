@@ -31,7 +31,7 @@
 						else if( $_SESSION['login'] == 2){ ?>
 							<div class="form-group has-success has-feedback">
 							  <label class="control-label" for="idSuccess">Login</label>
-							  <input id="loginS" name="loginS" type="text" class="form-control" value="<?php $_SESSION['nomLogin'] ?>">
+							  <input id="loginS" name="loginS" type="text" class="form-control" value="<?php echo $_SESSION['nomLogin'] ?>">
 							  <span class="glyphicon glyphicon-ok form-control-feedback"></span>
 							</div>
 					<?php }	
@@ -40,7 +40,7 @@
 						  <label class="control-label" for="idError">Login</label>
 						  <input id="loginS" name="loginS" type="text" class="form-control" id="idError">
 						  <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-						  <span class="help-block">Corrigez l'erreur s'il vous plait</span>
+						  <span class="help-block">Wrong login</span>
 						</div>
 					<?php } ?>
 				</div>
@@ -53,13 +53,14 @@
 						else{ ?>
 						<div class="form-group has-error has-feedback">
 						  <label class="control-label" for="idError">Password</label>
-						  <input name="passwordS" type="text" class="form-control" id="idError">
+						  <input name="passwordS" type="password" class="form-control" id="idError">
 						  <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-						  <span class="help-block">Corrigez l'erreur s'il vous plait</span>
+						  <span class="help-block">Wrong password</span>
 						</div>
 					<?php } ?>
 				</div>
 				<div class="g-recaptcha" data-sitekey="<?php echo $siteKey; ?>"></div>
+				<br>
 				<button type="submit" name="SignIn" class="btn btn-primary">Sign in</button>
 				<button type="submit" name="dico" class="btn btn-danger">Attaque dictionnaire</button>
 			</form>

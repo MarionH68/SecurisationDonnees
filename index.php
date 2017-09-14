@@ -5,4 +5,5 @@
 	$_SESSION['captcha'] = true;
 	$_SESSION['nomLogin'] = "";
 	header("Location: formulaire.php");
+	exit;
 ?>
