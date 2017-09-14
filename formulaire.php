@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<?php
+	$siteKey = '6LcVnTAUAAAAAGIqEzqNZ8pvMcMMv0f-EYdI7UTR'; //clé publique de la captcha google
+	$secret = '6LcVnTAUAAAAAIWUUKEud6RzSkSE2qUrm--Mw9Jj'; //clé secréte de la captcha google
+	require 'recaptchalib.php';
+?>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -10,10 +15,7 @@
 
     <body>
 		<br><br>
-		<?php
-			$siteKey = '6LcVnTAUAAAAAGIqEzqNZ8pvMcMMv0f-EYdI7UTR'; //clé publique de la captcha google
-			$secret = '6LcVnTAUAAAAAIWUUKEud6RzSkSE2qUrm--Mw9Jj'; //clé secréte de la captcha google
-		?>
+		
 		<div>
 			<div class="col-lg-1"></div>
 			
