@@ -38,23 +38,44 @@ class TableRows extends RecursiveIteratorIterator {
     } 
 } 
 
+if (isset($_POST['SignIn'])) {
+ 
+    // j'ai cliqué sur « Sign In »
+ 
+	try {
+		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$_POST['passwordNS']."';"); 
+		$stmt->execute();
 
+		// set the resulting array to associative
+		$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
+		foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
+			echo $v;
+		}
+	}
+	catch(PDOException $e) {
+		echo "Error: " . $e->getMessage();
+	}
+	$conn = null;
+	echo "</table>";
+	} 
+elseif (isset($_POST['dico'])) {
+ try {
+		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$_POST['passwordNS']."';"); 
+		$stmt->execute();
 
-
-try {
-    $stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$_POST['passwordNS']."';"); 
-    $stmt->execute();
-
-    // set the resulting array to associative
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
-    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
-        echo $v;
-    }
+		// set the resulting array to associative
+		$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
+		/*foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
+			echo $v;
+		}*/
+	}
+	catch(PDOException $e) {
+		echo "Error: " . $e->getMessage();
+	}
+	$conn = null;
+	echo "</table>";
+	} 
+    // j'ai cliqué sur « Prévisualiser »
+ 
 }
-catch(PDOException $e) {
-    echo "Error: " . $e->getMessage();
-}
-$conn = null;
-echo "</table>";
-
 ?>
