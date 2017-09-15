@@ -32,7 +32,9 @@ if(isset($_POST["g-recaptcha-response"])) {
 		$_SERVER["REMOTE_ADDR"],
 		$_POST["g-recaptcha-response"]
 	);
-	if ($resp != null && $resp->success) {}
+	if ($resp != null && $resp->success) {
+		$_SESSION['captcha'] = true;
+	}
 	else {
 		$_SESSION['captcha'] = false;
 		header("Location: formulaire.php");
@@ -77,42 +79,83 @@ class TableRows extends RecursiveIteratorIterator {
         echo "</tr>" . "\n";
     } 
 } 
-
-try {
-    $resLogin = $conn->prepare("SELECT * FROM users WHERE users.login = ?"); 
-    $resLogin->execute(array($login));
-	$verifLogin = $resLogin->fetchAll();
-	if(count($verifLogin) == 0){
-		$_SESSION['login'] = 0;
-		header("Location: formulaire.php");
-		exit;
+if (isset($_POST['SignIn'])){
+	try {
+		$resLogin = $conn->prepare("SELECT * FROM users WHERE users.login = ?"); 
+		$resLogin->execute(array($login));
+		$verifLogin = $resLogin->fetchAll();
+		if(count($verifLogin) == 0){
+			$_SESSION['login'] = 0;
+			header("Location: formulaire.php");
+			exit;
+		}
+		
+		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
+		$stmt->execute(array($login,$pass));
+		
+		// set the resulting array to associative
+		if(count($stmt->fetchAll())==0){
+			$_SESSION['login'] = 2;
+			$_SESSION['nomLogin'] = $_POST['loginS'];
+			$_SESSION['password'] = false;
+			header("Location: formulaire.php");
+			exit;
+		}
+		
+		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
+		$stmt->execute(array($login,$pass));
+		$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+		foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
+			echo $v;
+		}
 	}
-	
-	$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
-    $stmt->execute(array($login,$pass));
-	
-    // set the resulting array to associative
-	if(count($stmt->fetchAll())==0){
-		$_SESSION['login'] = 2;
-		$_SESSION['nomLogin'] = $_POST['loginS'];
-		$_SESSION['password'] = false;
-		header("Location: formulaire.php");
-		exit;
+	catch(PDOException $e) {
+		echo "Error: " . $e->getMessage();
 	}
-	
-	$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
-    $stmt->execute(array($login,$pass));
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
-        echo $v;
-    }
+	$conn = null;
+	echo "</tbody></table>";
 }
-catch(PDOException $e) {
-    echo "Error: " . $e->getMessage();
-}
-$conn = null;
-echo "</tbody></table>";
+elseif (isset($_POST['dico'])) {
+ try {
+		$resLogin = $conn->prepare("SELECT * FROM users WHERE users.login = ?"); 
+		$resLogin->execute(array($login));
+		$verifLogin = $resLogin->fetchAll();
+		if(count($verifLogin) == 0){
+			$_SESSION['login'] = 0;
+			header("Location: formulaire.php");
+			exit;
+		}
+		// j'ai cliqué sur « Attaque par dictionnaire »
+		$monfichier = fopen('Prenoms.txt', 'r');
+		$mdp = fgets($monfichier);
+		$mdp = str_replace(CHR(13).CHR(10),"",$mdp);
+		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginS']."' AND users.pass = '".$mdp."';"); 
+		$stmt->execute();
+		// set the resulting array to associative
+		$rows = $stmt->rowCount();
+		$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
+		
+		while ((($mdp = fgets($monfichier)) !== FALSE) AND $rows == 0 )	{
+			$mdp = str_replace(CHR(13).CHR(10),"",$mdp);
+			$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginS']."' AND users.pass = '".$mdp."';"); 
+			$stmt->execute();
+			// set the resulting array to associative
+			$rows = $stmt->rowCount();
+			//echo $mdp.$rows."-";
+			$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
 
+		}
+		foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
+			echo $v;
+		}
+		}	
+	catch(PDOException $e) {
+		echo "Error: " . $e->getMessage();
+	}
+	$conn = null;
+	echo "</tbody></table>";
+	fclose($monfichier);
+	} 
 
 echo "
 	<form class=\"col-lg-3\" method=\"post\" action=\"deconnexion.php\">
@@ -120,5 +163,6 @@ echo "
 		<button type=\"submit\" name=\"deconnexion\" class=\"btn btn-danger\">Log out</button>
 	</form>
 "
+
 
 ?>

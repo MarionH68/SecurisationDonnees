@@ -74,26 +74,27 @@ if (isset($_POST['SignIn'])) {
 	} 
 elseif (isset($_POST['dico'])) {
  try {
+		// j'ai cliqué sur « Attaque par dictionnaire »
 		$monfichier = fopen('Prenoms.txt', 'r');
-		$ligne = fgets($monfichier);
-		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$ligne."';"); 
+		$mdp = fgets($monfichier);
+		$mdp = str_replace(CHR(13).CHR(10),"",$mdp);
+		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$mdp."';"); 
 		$stmt->execute();
-		echo $ligne;
 		// set the resulting array to associative
 		$rows = $stmt->rowCount();
 		$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
 		
-		while (($rows == 0) AND ($ligne !== NULL))	{
-			$ligne = fgets($monfichier);
-			$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$ligne."';"); 
+		while ((($mdp = fgets($monfichier)) !== FALSE) AND $rows == 0 )	{
+			$mdp = str_replace(CHR(13).CHR(10),"",$mdp);
+			$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$mdp."';"); 
 			$stmt->execute();
-			echo $ligne;
 			// set the resulting array to associative
 			$rows = $stmt->rowCount();
+			//echo $mdp.$rows."-";
 			$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
 
 		}
-		foreach(new TableRows(new RecursiveArrayIterator($rows)) as $k=>$v) { 
+		foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
 			echo $v;
 		}
 		}	
@@ -104,7 +105,7 @@ elseif (isset($_POST['dico'])) {
 	echo "</tbody></table>";
 	fclose($monfichier);
 	} 
-    // j'ai cliqué sur « Attaque par dictionnaire »
+    
  
 	echo "
 	<form class=\"col-lg-3\" method=\"post\" action=\"deconnexion.php\">
