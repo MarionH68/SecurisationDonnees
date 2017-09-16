@@ -85,9 +85,7 @@
 				  <input id="passwordNS" name="passwordNS" type="password" class="form-control">
 				</div>
 				<button type="submit" name="SignIn" class="btn btn-primary">Sign in</button>
-				<button type="submit" name="dico" class="btn btn-danger">Attaque dictionnaire</button>
-				<a href="changementMotDePasse.php">Mot de pass oublié ? </a>
-				
+				<button type="submit" name="dico" class="btn btn-danger">Attaque dictionnaire</button>				
 			</form>
 		</div>
     </body>
