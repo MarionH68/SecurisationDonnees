@@ -1,4 +1,8 @@
 <?php
+	/*
+	 * Ce fichier sert à réinitialiser les variables de session.
+	 * L'utilisateur est ensuite redirigé vers le formulaire.
+	 */
 	session_start();
 	$siteKey = '6LcVnTAUAAAAAGIqEzqNZ8pvMcMMv0f-EYdI7UTR'; //clé publique de la captcha google
 	$secret = '6LcVnTAUAAAAAIWUUKEud6RzSkSE2qUrm--Mw9Jj'; //clé secréte de la captcha google
@@ -16,18 +20,26 @@
     </head>
 
     <body>
-		<br><br>
-		
+		<br>
+		<br>
 		<div>
 			<div class="col-lg-1"></div>
 			<form class="col-lg-3" method="post" action="safe.php"> 
 			  <legend>Formulaire sécurisé</legend>
 				<div class="form-group">
 					<?php
+						/*
+						 * Test si le login a déjà été saisi dans le champs de texte.
+						 * Si oui, l'interface reste celle de base.
+						 */
 						if($_SESSION['login'] == 1){ ?>
-						<label for="texte">Login : </label>
-						<input id="loginS" name="loginS" type="text" class="form-control">
+							<label for="texte">Login : </label>
+							<input id="loginS" name="loginS" type="text" class="form-control">
 					<?php }
+						/*
+						 * Test si le login saisi est juste.
+						 * Si oui, l'interface est changée et le login saisi reste dans le champs de texte.
+						 */
 						else if( $_SESSION['login'] == 2){ ?>
 							<div class="form-group has-success has-feedback">
 							  <label class="control-label" for="idSuccess">Login</label>
@@ -35,21 +47,33 @@
 							  <span class="glyphicon glyphicon-ok form-control-feedback"></span>
 							</div>
 					<?php }	
+						/*
+						 * Test si le login saisi est faux.
+						 * Si oui, l'interface est changée.
+						 */
 						else{ ?>
-						<div class="form-group has-error has-feedback">
-						  <label class="control-label" for="idError">Login</label>
-						  <input id="loginS" name="loginS" type="text" class="form-control" id="idError">
-						  <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-						  <span class="help-block">Wrong login</span>
-						</div>
+							<div class="form-group has-error has-feedback">
+							  <label class="control-label" for="idError">Login</label>
+							  <input id="loginS" name="loginS" type="text" class="form-control" id="idError">
+							  <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+							  <span class="help-block">Wrong login</span>
+							</div>
 					<?php } ?>
 				</div>
 				<div class="form-group">
 					<?php
+						/*
+						 * Test si le mot de passe saisi est juste.
+						 * Si oui, l'interface n'est pas changée.
+						 */
 						if($_SESSION['password'] == true){ ?>
 						<label for="texte">Password : </label>
 						<input id="passwordS" name="passwordS" type="password" class="form-control">
 					<?php }
+						/*
+						 * Test si le mot de passe saisi est faux.
+						 * Si oui, l'interface est changée.
+						 */
 						else{ ?>
 						<div class="form-group has-error has-feedback">
 						  <label class="control-label" for="idError">Password</label>
@@ -60,14 +84,20 @@
 					<?php } ?>
 				</div>
 				
+				<!-- Captcha Google -->
 				<div class="g-recaptcha" data-sitekey="<?php echo $siteKey; ?>"></div>
+				
 				<?php if($_SESSION['captcha'] == false){ ?>
+				    <!-- Test si la captcha n'a pas été cliqué, si oui, le message d'erreur est affiché. -->
 					<div class="alert alert-danger">
 						<strong>Error !</strong> Click on the captcha.
 					</div>
 				<?php }?>
 				<br>
+				
+				<!-- Le bouton "Sign in" sert à l'utilisateur à s'authentifier. -->
 				<button type="submit" name="SignIn" class="btn btn-primary">Sign in</button>
+				<!-- Le bouton "Attaque dictionnaire" sert à l'utilisateur à lancer le script d'attaque par dictionnaire. -->
 				<button type="submit" name="dico" class="btn btn-danger">Attaque dictionnaire</button>
 			</form>
 			
@@ -84,7 +114,10 @@
 				  <label for="texte">Password : </label>
 				  <input id="passwordNS" name="passwordNS" type="password" class="form-control">
 				</div>
+				
+				<!-- Le bouton "Sign in" sert à l'utilisateur à s'authentifier. -->
 				<button type="submit" name="SignIn" class="btn btn-primary">Sign in</button>
+				<!-- Le bouton "Attaque dictionnaire" sert à l'utilisateur à lancer le script d'attaque par dictionnaire. -->
 				<button type="submit" name="dico" class="btn btn-danger">Attaque dictionnaire</button>				
 			</form>
 		</div>
