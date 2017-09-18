@@ -83,7 +83,7 @@ if (isset($_POST['SignIn'])) {
 		// set the resulting array to associative
 		$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 		
-		//Appel de la fonction d'affichage d'une ligne pour chaque données.
+		//Appel de la fonction d'affichage d'une ligne pour chaque donnée.
 		foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
 			echo $v;
 		}
@@ -108,7 +108,7 @@ elseif (isset($_POST['dico'])) {
 		//suppression des caractères spéciaux.
 		$mdp = str_replace(CHR(13).CHR(10),"",$mdp);
 		
-		//Requête pour récupérer les données de l'utilisateur dont le login est saisi dans le formulaire et le mot de passe est celui récupérer dans le dictionnaire.
+		//Requête pour récupérer les données de l'utilisateur dont le login est saisi dans le formulaire et le mot de passe est celui récupéré dans le dictionnaire.
 		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginNS']."' AND users.pass = '".$mdp."';"); 
 		$stmt->execute();
 		// set the resulting array to associative
@@ -124,7 +124,6 @@ elseif (isset($_POST['dico'])) {
 			$stmt->execute();
 			// set the resulting array to associative
 			$rows = $stmt->rowCount();
-			//echo $mdp.$rows."-";
 			$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
 
 		}

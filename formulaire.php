@@ -29,7 +29,7 @@
 				<div class="form-group">
 					<?php
 						/*
-						 * Test si le login a déjà été saisi dans le champs de texte.
+						 * Teste si le login a déjà été saisi dans le champs de texte.
 						 * Si oui, l'interface reste celle de base.
 						 */
 						if($_SESSION['login'] == 1){ ?>
@@ -37,7 +37,7 @@
 							<input id="loginS" name="loginS" type="text" class="form-control">
 					<?php }
 						/*
-						 * Test si le login saisi est juste.
+						 * Teste si le login saisi est juste.
 						 * Si oui, l'interface est changée et le login saisi reste dans le champs de texte.
 						 */
 						else if( $_SESSION['login'] == 2){ ?>
@@ -48,7 +48,7 @@
 							</div>
 					<?php }	
 						/*
-						 * Test si le login saisi est faux.
+						 * Teste si le login saisi est faux.
 						 * Si oui, l'interface est changée.
 						 */
 						else{ ?>
@@ -63,7 +63,7 @@
 				<div class="form-group">
 					<?php
 						/*
-						 * Test si le mot de passe saisi est juste.
+						 * Teste si le mot de passe saisi est juste.
 						 * Si oui, l'interface n'est pas changée.
 						 */
 						if($_SESSION['password'] == true){ ?>
@@ -71,7 +71,7 @@
 						<input id="passwordS" name="passwordS" type="password" class="form-control">
 					<?php }
 						/*
-						 * Test si le mot de passe saisi est faux.
+						 * Teste si le mot de passe saisi est faux.
 						 * Si oui, l'interface est changée.
 						 */
 						else{ ?>
@@ -88,7 +88,7 @@
 				<div class="g-recaptcha" data-sitekey="<?php echo $siteKey; ?>"></div>
 				
 				<?php if($_SESSION['captcha'] == false){ ?>
-				    <!-- Test si la captcha n'a pas été cliqué, si oui, le message d'erreur est affiché. -->
+				    <!-- Teste si la captcha n'a pas été cliquée, si oui, le message d'erreur est affiché. -->
 					<div class="alert alert-danger">
 						<strong>Error !</strong> Click on the captcha.
 					</div>

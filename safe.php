@@ -35,7 +35,7 @@ catch(PDOException $e){
 }
 	
 /*
- * Test si la captcha a été cliquée. Si non, la variable de session est modifiée.
+ * Teste si la captcha a été cliquée. Si non, la variable de session est modifiée.
  */
 $reCaptcha = new ReCaptcha($secret);
 if(isset($_POST["g-recaptcha-response"])) {
@@ -105,7 +105,7 @@ if (isset($_POST['SignIn'])){
  
 	try {
 		/*
-		 * Requête utilisé pour savoir si le login saisi dans le formulaire existe bien.
+		 * Requête utilisée pour savoir si le login saisi dans le formulaire existe bien.
 		 */ 
 		$resLogin = $conn->prepare("SELECT * FROM users WHERE users.login = ?"); 
 		$resLogin->execute(array($login));
@@ -140,7 +140,7 @@ if (isset($_POST['SignIn'])){
 		}
 		
 		/*
-		 * Requête utilisé pour extraire toutes les données de l'utilisateur.
+		 * Requête utilisée pour extraire toutes les données de l'utilisateur.
 		 */ 
 		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = ? AND users.pass =  ?"); 
 		$stmt->execute(array($login,$pass));
@@ -164,7 +164,7 @@ elseif (isset($_POST['dico'])) {
 		// j'ai cliqué sur le bouton « Attaque par dictionnaire »
 		
 		/*
-		 * Requête utilisé pour savoir si le login saisi dans le formulaire existe bien.
+		 * Requête utilisée pour savoir si le login saisi dans le formulaire existe bien.
 		 */ 
 		$resLogin = $conn->prepare("SELECT * FROM users WHERE users.login = ?"); 
 		$resLogin->execute(array($login));
@@ -188,7 +188,7 @@ elseif (isset($_POST['dico'])) {
 		//suppression des caractères spéciaux.
 		$mdp = str_replace(CHR(13).CHR(10),"",$mdp);
 		
-		//Requête pour récupérer les données de l'utilisateur dont le login est saisi dans le formulaire et le mot de passe est celui récupérer dans le dictionnaire.
+		//Requête pour récupérer les données de l'utilisateur dont le login est saisi dans le formulaire et le mot de passe est celui récupéré dans le dictionnaire.
 		$stmt = $conn->prepare("SELECT users.login, accounts.idUsers, accounts.type, accounts.amount FROM accounts INNER JOIN users ON accounts.idUsers = users.id WHERE users.login = '".$_POST['loginS']."' AND users.pass = '".$mdp."';"); 
 		$stmt->execute();
 		// set the resulting array to associative
@@ -204,12 +204,11 @@ elseif (isset($_POST['dico'])) {
 			$stmt->execute();
 			// set the resulting array to associative
 			$rows = $stmt->rowCount();
-			//echo $mdp.$rows."-";
 			$result = $stmt->setFetchMode(PDO::FETCH_ASSOC); 
 
 		}
 		
-		//Appel de la fonction d'affichage d'une ligne pour chaque données.
+		//Appel de la fonction d'affichage d'une ligne pour chaque donnée.
 		foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) { 
 			echo $v;
 		}
